@@ -24,7 +24,7 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/gsi_keys.mk)
 $(call inherit-product, frameworks/native/build/phone-xhdpi-6144-dalvik-heap.mk)
 
 # Get non-open-source specific aspects
-$(call inherit-product, vendor/oneplus/sm7250-common/sm7250-common-vendor.mk)
+$(call inherit-product, vendor/oneplus/avicii/avicii-vendor.mk)
 
 # Additional native libraries
 PRODUCT_COPY_FILES += \
@@ -36,6 +36,12 @@ DEVICE_PACKAGE_OVERLAYS += \
     $(LOCAL_PATH)/overlay-lineage
 
 PRODUCT_ENFORCE_RRO_TARGETS := *
+
+PRODUCT_SHIPPING_API_LEVEL := 29
+
+# Device uses high-density artwork where available
+PRODUCT_AAPT_CONFIG := normal
+PRODUCT_AAPT_PREF_CONFIG := xxhdpi
 
 # VNDK
 PRODUCT_USE_PRODUCT_VNDK_OVERRIDE := true
@@ -148,9 +154,14 @@ PRODUCT_PACKAGES += \
     libvolumelistener
 
 PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/audio/audio_effects.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_effects.xml \
     $(LOCAL_PATH)/audio/audio_io_policy.conf:$(TARGET_COPY_OUT_VENDOR)/etc/audio_io_policy.conf \
     $(LOCAL_PATH)/audio/audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_policy_configuration.xml \
-    $(LOCAL_PATH)/audio/bluetooth_qti_hearing_aid_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/bluetooth_qti_hearing_aid_audio_policy_configuration.xml
+    $(LOCAL_PATH)/audio/audio_platform_info_intcodec.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_platform_info_intcodec.xml \
+    $(LOCAL_PATH)/audio/bluetooth_qti_hearing_aid_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/bluetooth_qti_hearing_aid_audio_policy_configuration.xml \
+    $(LOCAL_PATH)/audio/sound_trigger_mixer_paths.xml:$(TARGET_COPY_OUT_VENDOR)/etc/sound_trigger_mixer_paths.xml \
+    $(LOCAL_PATH)/audio/sound_trigger_platform_info.xml:$(TARGET_COPY_OUT_VENDOR)/etc/sound_trigger_platform_info.xml \
+    $(LOCAL_PATH)/audio/mixer_paths.xml:$(TARGET_COPY_OUT_VENDOR)/etc/mixer_paths.xml
 
 PRODUCT_COPY_FILES += \
     frameworks/av/services/audiopolicy/config/a2dp_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/a2dp_audio_policy_configuration.xml \
@@ -183,8 +194,9 @@ PRODUCT_PACKAGES += \
     Snap \
     vendor.qti.hardware.camera.postproc@1.0.vendor
 
-# Common init scripts
+# Device init scripts
 PRODUCT_PACKAGES += \
+    fstab.qcom \
     ftm_power_config.sh \
     init.class_main.sh \
     init.cust.rc \
@@ -384,6 +396,10 @@ PRODUCT_PACKAGES += \
 PRODUCT_BOOT_JARS += \
     oneplus-fwk.oneplus_lito
 
+# OPFeature
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/odm_feature_list:$(TARGET_COPY_OUT_ODM)/etc/odm_feature_list
+
 # Power
 PRODUCT_PACKAGES += \
     android.hardware.power-service-qti \
@@ -445,6 +461,11 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     vendor.lineage.touch@1.0-service.oneplus_lito
 
+# tri-state-key
+PRODUCT_PACKAGES += \
+    KeyHandler \
+    tri-state-key_daemon
+
 # Trust HAL
 PRODUCT_PACKAGES += \
     vendor.lineage.trust@1.0-service
@@ -471,6 +492,9 @@ PRODUCT_PACKAGES += \
     libstdc++.vendor
 
 # Vibrator
+PRODUCT_PACKAGES += \
+    vendor.qti.hardware.vibrator.service.oneplus_lito
+
 PRODUCT_COPY_FILES += \
     vendor/qcom/opensource/vibrator/excluded-input-devices.xml:$(TARGET_COPY_OUT_VENDOR)/etc/excluded-input-devices.xml
 
@@ -528,3 +552,6 @@ ifneq (,$(filter userdebug eng, $(TARGET_BUILD_VARIANT)))
 PRODUCT_PRODUCT_PROPERTIES += \
     persist.sys.disable_rescue=true
 endif
+
+# Inherit from vendor blobs
+$(call inherit-product, vendor/oneplus/avicii/avicii-vendor.mk)
