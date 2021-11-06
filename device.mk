@@ -30,6 +30,9 @@ $(call inherit-product, vendor/oneplus/avicii/avicii-vendor.mk)
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/public.libraries.txt:$(TARGET_COPY_OUT_VENDOR)/etc/public.libraries.txt
 
+# OnePlus Camera
+$(call inherit-product-if-exists, vendor/oneplus/apps/avicii/config.mk)
+
 # Overlays
 DEVICE_PACKAGE_OVERLAYS += \
     $(LOCAL_PATH)/overlay \
